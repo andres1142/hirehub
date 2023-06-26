@@ -1,28 +1,35 @@
 import { useState } from 'react';
+import { useRouter } from "expo-router";
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuthentication } from "../../firebaseConfig";
 
+import Register from "./Register";
 
 
 function SignIn() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
 
-    function handleLogIn() {
-        console.log(email)
-        console.log(password)
-
-        const auth = getAuth()
-        signInWithEmailAndPassword(auth, email, password)
+    async function handleLogIn() {
+        let user
+        const auth = getAuthentication()
+        await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user)
+                user = userCredential.user;
+                debugger
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
             });
+        if (user === undefined) {
+            alert('Invalid Credentials')
+        } else {
+            alert('Welcome')
+        }
     }
 
     return (
@@ -35,7 +42,7 @@ function SignIn() {
             <View>
                 <TextInput
                     className='mb-6 px-3 h-9 bg-white rounded-full shadow-md shadow-slate-500'
-                    placeholder='Username'
+                    placeholder='Email'
                     placeholderTextColor='gray'
                     value={email}
                     onChangeText={text => setEmail(text)}
@@ -51,7 +58,7 @@ function SignIn() {
                 />
                 <TouchableOpacity
                     onPress={handleLogIn}
-                    className='mb-6 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'>
+                    className='mb-14 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'>
                     <Text className='text-lg text-white'>Log In</Text>
                 </TouchableOpacity>
 
@@ -67,6 +74,7 @@ function SignIn() {
                 </View>
 
                 <TouchableOpacity
+                    onPress={() => { router.push('/landing/Register') }}
                     className='mb-6 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'  >
                     <Text className='text-lg text-white'>Create Account</Text>
                 </TouchableOpacity>

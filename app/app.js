@@ -1,7 +1,7 @@
 import {View, SafeAreaView} from "react-native";
 import  { Stack, useRouter } from 'expo-router'
 
-import SignIn from '../components/landing/SignIn';
+import SignIn from './landing/SignIn';
 
 function App() {
   return (
@@ -11,6 +11,7 @@ function App() {
                   headerShown: false,
               }}
           />
+          {/* TODO: Check if the user is already logged-in.*/}
          <View className='px-12'>
             <SignIn/>
          </View>

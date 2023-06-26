@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./components/**/*.{js,jsx,ts,tsx}",
+    "./app/landing/*.{js,jsx,ts,tsx}",
     "./app/app.{js,jsx,ts,tsx}"
   ],
   theme: {
