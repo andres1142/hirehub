@@ -3,6 +3,7 @@ import { useState } from "react";
 import {View, Text, TextInput, TouchableOpacity, Platform} from "react-native";
 import {getAuthentication} from "../../firebaseConfig";
 import {createUserWithEmailAndPassword} from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function Form({isCompany}) {
 
@@ -12,7 +13,7 @@ function Form({isCompany}) {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [zipCode, setZipCode] = useState('')
-    const [profilePic, setProfilePic] = useState(null)
+    const [profilePic, setProfilePic] = useState({image: null, loading: false})
 
     const[error, setError] = useState('')
 
@@ -35,17 +36,21 @@ function Form({isCompany}) {
             if (user === undefined) {
                 alert('Invalid Credentials')
             } else {
-                alert('Welcome')
+
             }
         }
     }
 
     const handleUploadPicture = async () => {
-        const picture = await pickImage()
-        setProfilePic(picture)
+        try {
+            await pickImage()
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     const pickImage = async () => {
+        setProfilePic({image: null, loading: true})
         if (await checkPermissions()) {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -53,10 +58,12 @@ function Form({isCompany}) {
                 // aspect: [4, 3],
                 quality: 1,
             })
+            debugger
             console.log(result.assets[0])
             if (!result.canceled) {
-                setProfilePic(result.assets[0].uri);
+                setProfilePic({image: result.assets[0].uri, loading: false})
             }
+            console.log(profilePic)
         }
     }
 
@@ -65,6 +72,7 @@ function Form({isCompany}) {
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
             if (status !== 'granted') {
                 alert('Sorry, we need camera roll permissions to make this work!')
+                setProfilePic({image: null, loading: false})
                 return false
             }
             return true
@@ -135,10 +143,13 @@ function Form({isCompany}) {
                     onChangeText={text => setDescription(text)}
                 />
 
+                {
+                    profilePic.loading ? <Text>Loading...</Text> : null
+                }
                 <Text
                     onPress={handleUploadPicture}
-                    className={'pb-4 text-center'}>{profilePic === null ?
-                    isCompany ? "Upload Logo or Profile Picture" : "Upload Picture" : "Image Uploaded"}
+                    className={'pb-4 text-center'}>
+                        {profilePic.image === null ? isCompany ? "Upload Logo or Profile Picture" : "Upload Picture" : "Image Uploaded"}
                 </Text>
             </View>
 
