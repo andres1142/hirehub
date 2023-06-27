@@ -1,5 +1,6 @@
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
-import {View, Text, TextInput, TouchableOpacity} from "react-native";
+import {View, Text, TextInput, TouchableOpacity, Platform} from "react-native";
 import {getAuthentication} from "../../firebaseConfig";
 import {createUserWithEmailAndPassword} from "firebase/auth";
 
@@ -15,6 +16,7 @@ function Form({isCompany}) {
 
     const[error, setError] = useState('')
 
+
     const handleCreateAccount = () => {
         debugger
         setError(checkFields())
@@ -24,18 +26,48 @@ function Form({isCompany}) {
             const auth = getAuthentication()
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    user = userCredential.user;
+                    user = userCredential.user
                     debugger
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
+                    setError(error.code)
                 });
             if (user === undefined) {
                 alert('Invalid Credentials')
             } else {
                 alert('Welcome')
             }
+        }
+    }
+
+    const handleUploadPicture = async () => {
+        const picture = await pickImage()
+        setProfilePic(picture)
+    }
+
+    const pickImage = async () => {
+        if (await checkPermissions()) {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                // aspect: [4, 3],
+                quality: 1,
+            })
+            console.log(result.assets[0])
+            if (!result.canceled) {
+                setProfilePic(result.assets[0].uri);
+            }
+        }
+    }
+
+    const checkPermissions = async () => {
+        if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!')
+                return false
+            }
+            return true
         }
     }
 
@@ -98,13 +130,16 @@ function Form({isCompany}) {
                     placeholderTextColor='gray'
                     multiline
                     numberOfLines={3}
+                    blurOnSubmit={true}
                     value={description}
                     onChangeText={text => setDescription(text)}
                 />
 
                 <Text
-                    onPress={() => alert('Upload Picture')}
-                    className={'pb-4 text-center'}>Upload Picture</Text>
+                    onPress={handleUploadPicture}
+                    className={'pb-4 text-center'}>{profilePic === null ?
+                    isCompany ? "Upload Logo or Profile Picture" : "Upload Picture" : "Image Uploaded"}
+                </Text>
             </View>
 
             <TouchableOpacity
