@@ -1,4 +1,3 @@
-import {IndividualForm} from "./IndividualForm";
-import {CompanyForm} from "./CompanyForm";
+import { Form } from './Form'
 
-export {IndividualForm, CompanyForm }
+export { Form }

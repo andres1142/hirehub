@@ -1,18 +1,19 @@
 import { useState } from "react";
 import {View, Text, TextInput, TouchableOpacity} from "react-native";
-import {createUserWithEmailAndPassword } from "firebase/auth";
 import {getAuthentication} from "../../firebaseConfig";
+import {createUserWithEmailAndPassword} from "firebase/auth";
 
-function IndividualForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPass, setConfirmPass] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [zipCode, setZipCode] = useState('');
-    const [profilePic, setProfilePic] = useState(null);
+function Form({isCompany}) {
 
-    const[error, setError] = useState('');
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPass, setConfirmPass] = useState('')
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    const [zipCode, setZipCode] = useState('')
+    const [profilePic, setProfilePic] = useState(null)
+
+    const[error, setError] = useState('')
 
     const handleCreateAccount = () => {
         debugger
@@ -53,7 +54,7 @@ function IndividualForm() {
             <View>
                 <TextInput
                     className='mb-6 px-3 h-9 bg-white rounded-full shadow-md  shadow-slate-500'
-                    placeholder='Name'
+                    placeholder={isCompany ? 'Company Name' : 'Name'}
                     placeholderTextColor='gray'
                     value={name}
                     onChangeText={text => setName(text)}
@@ -92,16 +93,18 @@ function IndividualForm() {
                     onChangeText={text => setZipCode(text)}
                 />
                 <TextInput
-                    className='mb-6 px-3 bg-white rounded-2xl shadow-md  shadow-slate-500'
-                    placeholder='Description & Hobbies'
+                    className='mb-8 px-3 h-20 bg-white rounded-2xl shadow-md  shadow-slate-500'
+                    placeholder={isCompany ? 'Company Description' : 'Description & Hobbies'}
                     placeholderTextColor='gray'
                     multiline
-                    numberOfLines={4}
+                    numberOfLines={3}
                     value={description}
                     onChangeText={text => setDescription(text)}
                 />
 
-                <Text className={'pb-4 text-center'}>Upload Picture</Text>
+                <Text
+                    onPress={() => alert('Upload Picture')}
+                    className={'pb-4 text-center'}>Upload Picture</Text>
             </View>
 
             <TouchableOpacity
@@ -113,4 +116,4 @@ function IndividualForm() {
     )
 }
 
-export { IndividualForm }
+export { Form }

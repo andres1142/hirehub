@@ -2,7 +2,7 @@ import {View, Text, SafeAreaView, TouchableOpacity} from "react-native";
 import { useState } from 'react';
 import {Stack} from "expo-router";
 
-import { CompanyForm, IndividualForm } from "../../components/Register";
+import { Form } from "../../components/Register";
 
 function Register() {
     const [isCompany, setIsCompany] = useState(false)
@@ -41,11 +41,7 @@ function Register() {
                 </View>
 
                 {
-                    didUserClick && isCompany ?
-                        <CompanyForm />
-                    : didUserClick && !isCompany ?
-                        <IndividualForm />
-                        : null
+                    didUserClick ? <Form isCompany={isCompany}/> : null
                 }
             </View>
         </SafeAreaView>
