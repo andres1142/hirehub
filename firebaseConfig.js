@@ -1,4 +1,6 @@
 import { initializeApp , getApps } from "firebase/app";
+import { getStorage as storage}  from "firebase/storage";
+import { getFirestore  as firestore} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -15,10 +17,24 @@ const firebaseConfig = {
 let app = initializeApp(firebaseConfig);
 
 function getAuthentication() {
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-  }
+  checkApp();
   return getAuth(app);
 }
 
-export  { getAuthentication }
+function getStorage() {
+  checkApp();
+  return storage(app)
+}
+
+function getFirestore() {
+    checkApp();
+    return firestore(app);
+}
+
+function checkApp() {
+    if (!getApps().length) {
+        app = initializeApp(firebaseConfig);
+    }
+}
+
+export  { getAuthentication, getStorage, getFirestore }

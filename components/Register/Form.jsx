@@ -1,9 +1,13 @@
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from "react";
-import {View, Text, TextInput, TouchableOpacity, Platform} from "react-native";
-import {getAuthentication} from "../../firebaseConfig";
+import {View, Text, TextInput, TouchableOpacity, ActivityIndicator, Platform} from "react-native";
+import {PaperClipIcon} from "react-native-heroicons/outline";
+import {useState} from "react";
+import {getAuthentication, getStorage, getFirestore} from "../../firebaseConfig";
+
 import {createUserWithEmailAndPassword} from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import {collection, addDoc} from "firebase/firestore";
+
 
 function Form({isCompany}) {
 
@@ -18,26 +22,70 @@ function Form({isCompany}) {
     const[error, setError] = useState('')
 
 
-    const handleCreateAccount = () => {
-        debugger
+    const handleCreateAccount = async () => {
         setError(checkFields())
         console.log(error)
         if (error.length === 0) {
             let user
             const auth = getAuthentication()
-            createUserWithEmailAndPassword(auth, email, password)
+            await createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     user = userCredential.user
-                    debugger
                 })
                 .catch((error) => {
-                    setError(error.code)
+                    setError(error.message)
                 });
-            if (user === undefined) {
-                alert('Invalid Credentials')
-            } else {
 
+            if (user === undefined) {
+                alert(error)
+            } else {
+                await storeUserData(user)
             }
+        }
+    }
+
+    const storeUserData = async (user) => {
+        const storage = getStorage()
+        const storageRef = ref(storage, 'users/' + user.uid + '/profilePicture')
+        try {
+            const blob = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                    resolve(xhr.response);
+                };
+                xhr.onerror = function (e) {
+                    console.log(e);
+                    reject(new TypeError("Network request failed"));
+                };
+                xhr.responseType = "blob";
+                xhr.open("GET", profilePic.image, true);
+                xhr.send(null);
+            });
+            const result = await uploadBytes(storageRef, blob);
+            blob.close()
+
+            const downloadURL = await getDownloadURL(storageRef)
+            console.log(downloadURL)
+
+            debugger
+            const db = getFirestore()
+            const docRef = await addDoc(collection(db,'users'),{
+                name: name,
+                email: email,
+                description: description,
+                zipCode: zipCode,
+                profilePicture: downloadURL,
+                isCompany: isCompany
+            })
+                .then(() => {
+                    console.log("Document successfully written!");
+                    alert('Account Created')
+                })
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                })
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -58,7 +106,6 @@ function Form({isCompany}) {
                 // aspect: [4, 3],
                 quality: 1,
             })
-            debugger
             console.log(result.assets[0])
             if (!result.canceled) {
                 setProfilePic({image: result.assets[0].uri, loading: false})
@@ -83,6 +130,9 @@ function Form({isCompany}) {
         if(email.length === 0 || password.length === 0 || confirmPass.length === 0
             || name.length === 0 || description.length === 0 || zipCode.length === 0) {
             return 'Please fill out all fields'
+        }
+        if (email.indexOf('@') === -1) {
+            return 'Invalid Email'
         }
         if (password !== confirmPass) {
             return 'Passwords do not match'
@@ -143,14 +193,40 @@ function Form({isCompany}) {
                     onChangeText={text => setDescription(text)}
                 />
 
+
                 {
-                    profilePic.loading ? <Text>Loading...</Text> : null
+                    //Check if profile pic is loading or not
+                    profilePic.loading ?
+                        <View className={'pb-4'}>
+                            <ActivityIndicator color={'#EBF3F7'}/>
+                        </View>
+                        :
+                        <TouchableOpacity
+                            className={'flex-row justify-center'}
+                            onPress={handleUploadPicture}>
+
+                            <View
+                                className={'px-0.5'}>
+                                <PaperClipIcon color={profilePic.image === null ? 'black': 'white'} size={20}/>
+                            </View>
+                            <View
+                                className={'pb-4'}>
+                                { profilePic.image === null && !profilePic.loading ?
+                                    <Text
+                                        className={'text-center'}>
+                                        {
+                                            isCompany ? "Upload Logo or Profile Picture" : "Upload Picture"
+                                        }
+                                    </Text>
+                                    :
+                                    <Text
+                                        className={'pb-4 text-center text-primary'}>
+                                        Picture Uploaded
+                                    </Text>
+                                }
+                            </View>
+                        </TouchableOpacity>
                 }
-                <Text
-                    onPress={handleUploadPicture}
-                    className={'pb-4 text-center'}>
-                        {profilePic.image === null ? isCompany ? "Upload Logo or Profile Picture" : "Upload Picture" : "Image Uploaded"}
-                </Text>
             </View>
 
             <TouchableOpacity
