@@ -2,8 +2,9 @@
 module.exports = {
   content: [
     "./components/**/*.{js,jsx,ts,tsx}",
-    "./app/landing/*.{js,jsx,ts,tsx}",
-    "./app/app.{js,jsx,ts,tsx}"
+    "./app/(auth)/*.{js,jsx,ts,tsx}",
+    "./app/index.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {

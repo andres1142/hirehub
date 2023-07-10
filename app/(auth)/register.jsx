@@ -1,5 +1,4 @@
 import {View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, Platform} from "react-native";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import { useState } from 'react';
 import {Stack} from "expo-router";
 
@@ -12,12 +11,6 @@ function Register() {
 
     return (
         <SafeAreaView className='flex-1 bg-secondary justify-center'>
-
-            <Stack.Screen
-                options={{
-                    headerShown: false,
-                }}
-            />
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <View>
@@ -43,8 +36,6 @@ function Register() {
                             <Text className='text-xl text-white'>Individual</Text>
                         </TouchableOpacity>
                     </View>
-
-
 
                         {
                             didUserClick ? <Form isCompany={isCompany}/> : null

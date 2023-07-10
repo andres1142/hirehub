@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import {View, Text, TextInput, TouchableOpacity, ActivityIndicator, Platform} from "react-native";
+import { useRouter} from "expo-router";
 import {PaperClipIcon} from "react-native-heroicons/outline";
 import {useState} from "react";
 import {getAuthentication, getStorage, getFirestore} from "../../firebaseConfig";
@@ -10,6 +11,8 @@ import {collection, addDoc} from "firebase/firestore";
 
 
 function Form({isCompany}) {
+    const router = useRouter()
+
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -230,7 +233,11 @@ function Form({isCompany}) {
             </View>
 
             <TouchableOpacity
-                onPress={handleCreateAccount}
+                //onPress={handleCreateAccount}
+                onPress={() => {
+                    // TODO: Change this back to call handler
+                    router.push('/(tabs)/home')
+                }}
                 className='mb-6 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'  >
                 <Text className='text-lg text-white'>Create Account</Text>
             </TouchableOpacity>
