@@ -1,39 +1,34 @@
 import { useState } from 'react';
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import {View, Text, TextInput, TouchableOpacity, SafeAreaView} from 'react-native';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { getAuthentication } from "../../firebaseConfig";
-
-
+import { AuthStore, appSignIn } from "../../store";
 
 function Login() {
     const router = useRouter();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
 
     async function handleLogIn() {
-        let user
-        const auth = getAuthentication()
-        await signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                user = userCredential.user;
-                debugger
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-            });
-        if (user === undefined) {
-            alert('Invalid Credentials')
-        } else {
-            // TODO: Add logic to redirect to home page
-            router.replace('/(tabs)/home')
+        try {
+            const result = await appSignIn(email, password);
+            if (result?.user) {
+                router.replace('/(tabs)/home');
+            } else {
+                alert('Invalid credentials');
+            }
+        } catch (e) {
+            console.error("Error logging in", e)
         }
     }
 
     return (
         <SafeAreaView className='flex-1 bg-secondary justify-center'>
+            <Stack.Screen
+                options={{animation: 'none'}}
+            />
+
             <View >
                 <View className='flex-none items-center'>
                     <Text style={{ fontFamily: 'Lobster' }} className={'pb-20 text-7xl text-white shadow-sm shadow-black'}>HireHub</Text>
@@ -58,10 +53,7 @@ function Login() {
                         onChangeText={text => setPassword(text)}
                     />
                     <TouchableOpacity
-                        onPress={() => {
-                            // TODO: Change this back to call handler
-                            router.push('/(tabs)/home')
-                        }}
+                        onPress={handleLogIn}
                         className='mb-14 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'>
                         <Text className='text-lg text-white'>Log In</Text>
                     </TouchableOpacity>
