@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter, Stack } from "expo-router";
 import {View, Text, TextInput, TouchableOpacity, SafeAreaView} from 'react-native';
-import { AuthStore, appSignIn } from "../../store";
+import { appSignIn } from "../../store";
 
 function Login() {
     const router = useRouter();

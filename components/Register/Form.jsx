@@ -1,13 +1,18 @@
 import * as ImagePicker from 'expo-image-picker';
-import {View, Text, TextInput, TouchableOpacity, ActivityIndicator, Platform} from "react-native";
+import { View,
+        Text,
+        TextInput,
+        TouchableOpacity,
+        ActivityIndicator,
+        Platform
+} from "react-native";
+import { appSignUp } from "../../store";
 import { useRouter} from "expo-router";
 import {PaperClipIcon} from "react-native-heroicons/outline";
 import {useState} from "react";
-import {getAuthentication, getStorage, getFirestore} from "../../firebaseConfig";
 
 import {createUserWithEmailAndPassword} from "firebase/auth";
-import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
-import {collection, addDoc} from "firebase/firestore";
+
 
 
 function Form({isCompany}) {
@@ -24,73 +29,27 @@ function Form({isCompany}) {
 
     const[error, setError] = useState('')
 
-
     const handleCreateAccount = async () => {
-        setError(checkFields())
-        console.log(error)
-        if (error.length === 0) {
-            let user
-            const auth = getAuthentication()
-            await createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    user = userCredential.user
-                })
-                .catch((error) => {
-                    setError(error.message)
-                });
-
-            if (user === undefined) {
-                alert(error)
-            } else {
-                await storeUserData(user)
+        const curError = checkFields()
+        console.log(curError)
+        if(curError?.length === 0) {
+            try {
+                const result = await appSignUp(email, password, name, description, zipCode, profilePic.image)
+                debugger
+                if (result?.user) {
+                    router.replace('/(tabs)/home')
+                } else {
+                    setError(result?.error)
+                }
+            } catch (e) {
+                console.log(e)
+                setError(e.message)
             }
+        } else {
+            setError(curError)
         }
     }
 
-    const storeUserData = async (user) => {
-        const storage = getStorage()
-        const storageRef = ref(storage, 'users/' + user.uid + '/profilePicture')
-        try {
-            const blob = await new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.onload = function () {
-                    resolve(xhr.response);
-                };
-                xhr.onerror = function (e) {
-                    console.log(e);
-                    reject(new TypeError("Network request failed"));
-                };
-                xhr.responseType = "blob";
-                xhr.open("GET", profilePic.image, true);
-                xhr.send(null);
-            });
-            const result = await uploadBytes(storageRef, blob);
-            blob.close()
-
-            const downloadURL = await getDownloadURL(storageRef)
-            console.log(downloadURL)
-
-            debugger
-            const db = getFirestore()
-            const docRef = await addDoc(collection(db,'users'),{
-                name: name,
-                email: email,
-                description: description,
-                zipCode: zipCode,
-                profilePicture: downloadURL,
-                isCompany: isCompany
-            })
-                .then(() => {
-                    console.log("Document successfully written!");
-                    alert('Account Created')
-                })
-                .catch((error) => {
-                    console.error("Error writing document: ", error);
-                })
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     const handleUploadPicture = async () => {
         try {
@@ -109,11 +68,9 @@ function Form({isCompany}) {
                 // aspect: [4, 3],
                 quality: 1,
             })
-            console.log(result.assets[0])
             if (!result.canceled) {
                 setProfilePic({image: result.assets[0].uri, loading: false})
             }
-            console.log(profilePic)
         }
     }
 
@@ -131,7 +88,7 @@ function Form({isCompany}) {
 
     const checkFields= () => {
         if(email.length === 0 || password.length === 0 || confirmPass.length === 0
-            || name.length === 0 || description.length === 0 || zipCode.length === 0) {
+            || name.length === 0 || description.length === 0 || zipCode.length === 0 || profilePic.image === null) {
             return 'Please fill out all fields'
         }
         if (email.indexOf('@') === -1) {
@@ -140,6 +97,13 @@ function Form({isCompany}) {
         if (password !== confirmPass) {
             return 'Passwords do not match'
         }
+        if (password.length < 6) {
+            return 'Password must be at least 6 characters'
+        }
+        if (zipCode.length !== 5) {
+            return 'Invalid Zip Code'
+        }
+        return ''
     }
 
     return (
@@ -232,12 +196,12 @@ function Form({isCompany}) {
                 }
             </View>
 
+            {
+                error.length > 0 ? <Text className={'text-red-500 text-center'}>{error}</Text> : null
+            }
+
             <TouchableOpacity
-                //onPress={handleCreateAccount}
-                onPress={() => {
-                    // TODO: Change this back to call handler
-                    router.push('/(tabs)/home')
-                }}
+                onPress={handleCreateAccount}
                 className='mb-6 h-10 flex-none justify-center items-center  rounded-full bg-slate-500'  >
                 <Text className='text-lg text-white'>Create Account</Text>
             </TouchableOpacity>
