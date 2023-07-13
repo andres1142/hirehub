@@ -8,8 +8,8 @@ import { View,
 } from "react-native";
 import { appSignUp } from "../../store";
 import { useRouter} from "expo-router";
-import {PaperClipIcon} from "react-native-heroicons/outline";
-import {useState} from "react";
+import { PaperClipIcon } from "react-native-heroicons/outline";
+import { useState } from "react";
 
 import {createUserWithEmailAndPassword} from "firebase/auth";
 

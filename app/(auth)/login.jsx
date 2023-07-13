@@ -26,7 +26,7 @@ function Login() {
     return (
         <SafeAreaView className='flex-1 bg-secondary justify-center'>
             <Stack.Screen
-                options={{animation: 'none'}}
+                options={{gestureEnabled: false}}
             />
 
             <View >

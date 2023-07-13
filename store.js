@@ -16,7 +16,6 @@ export const AuthStore = new Store({
 })
 
 const unsub = onAuthStateChanged(auth, (user) => {
-    console.log("onAuthStateChange", user)
     AuthStore.update((store) => {
         store.user = user
         store.isLoggedIn = !!user

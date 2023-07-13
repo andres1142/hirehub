@@ -13,8 +13,7 @@ const Layout = () => {
 
     return (
         <Stack screenOptions={{
-            headerShown: false,
-            gestureEnabled: false,
+            headerShown: false
         }}/>
     )
 };

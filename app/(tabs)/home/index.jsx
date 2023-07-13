@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useRouter, Stack  } from "expo-router";
 import {SafeAreaView, ScrollView, TouchableOpacity, Text} from "react-native";
 import { AuthStore, appSignOut } from "../../../store";
 
