@@ -6,7 +6,7 @@ function Index() {
     const router = useRouter();
 
     return (
-        <SafeAreaView>
+        <SafeAreaView className={'flex-1 bg-secondary'}>
             <Text>
                 Profile
             </Text>
