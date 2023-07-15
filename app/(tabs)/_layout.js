@@ -56,11 +56,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#EBF3F7',
         marginHorizontal: MARGIN,
         paddingBottom: 0,
-        borderRadius: 12,
+        borderRadius: 20,
     },
     tabBarItem: {
         width: TAB_WIDTH,
-        borderRadius: 12,
+        borderRadius: 20,
     }
 })
 
