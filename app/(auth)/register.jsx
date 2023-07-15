@@ -2,7 +2,7 @@ import {View, Text, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, Platfo
 import { useState } from 'react';
 import {Stack} from "expo-router";
 
-import { Form } from "../../components/Register";
+import { Form } from "../../components/register";
 
 
 function Register() {

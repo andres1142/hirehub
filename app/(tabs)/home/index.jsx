@@ -16,7 +16,7 @@ function Index() {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView className={'flex-1 bg-secondary'}>
             <ScrollView>
                 <TouchableOpacity onPress={handleLogOut}>
                     <Text>
