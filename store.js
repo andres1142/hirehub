@@ -5,7 +5,7 @@ import { onAuthStateChanged,
         signOut,
         updateProfile
 } from 'firebase/auth'
-import { app, auth, firestore, storage } from './firebaseConfig'
+import { app, auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {addDoc, collection } from "firebase/firestore";
 
