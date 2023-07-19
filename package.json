@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.11",
-    "d3-shape": "^3.2.0",
+    "dotenv": "^16.3.1",
     "expo": "~48.0.18",
     "expo-constants": "~14.2.1",
     "expo-dev-client": "~2.2.1",
