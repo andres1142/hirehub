@@ -34,8 +34,7 @@ function Form({isCompany}) {
         console.log(curError)
         if(curError?.length === 0) {
             try {
-                const result = await appSignUp(email, password, name, description, zipCode, profilePic.image)
-                debugger
+                const result = await appSignUp(email, password, name, description, zipCode, isCompany, profilePic.image)
                 if (result?.user) {
                     router.replace('/(tabs)/home')
                 } else {

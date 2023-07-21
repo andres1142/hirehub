@@ -7,8 +7,8 @@ function Index() {
 
     return (
         <SafeAreaView className={'flex-1 bg-secondary'}>
-            <Text>
-                Profile
+            <Text className={'text-white text-2xl'}>
+                {AuthStore.getRawState().user?.email}
             </Text>
         </SafeAreaView>
     )

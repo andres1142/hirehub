@@ -1,13 +1,14 @@
 import { Store, registerInDevtools } from 'pullstate'
-import { onAuthStateChanged,
-        signInWithEmailAndPassword,
-        createUserWithEmailAndPassword,
-        signOut,
-        updateProfile
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    updateProfile
 } from 'firebase/auth'
 import { app, auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import {addDoc, collection } from "firebase/firestore";
+import { doc ,collection, setDoc } from "firebase/firestore";
 
 export const AuthStore = new Store({
     isLoggedIn: false,
@@ -30,7 +31,7 @@ const appSignIn = async (email, password) => {
             store.user = result.user
             store.isLoggedIn = !!result.user
         })
-        return { user: auth.currentUser}
+        return { user: auth.currentUser }
     } catch (error) {
         console.log(error)
         return { error: error }
@@ -52,22 +53,21 @@ const appSignOut = async () => {
     }
 }
 
-const appSignUp = async (email, password, name, description, zipCode, isCompany,  profilePic) => {
+const appSignUp = async (email, password, name, description, zipCode, isCompany, profilePic) => {
     try {
+
         const result = await createUserWithEmailAndPassword(auth, email, password)
-        debugger
         const photoURL = await storeUserData(auth.currentUser, name, description, zipCode, isCompany, profilePic)
         // add the displayName and photoURL to the user
-        await updateProfile(result.user, {displayName: name, photoURL: photoURL})
+        await updateProfile(result.user, { displayName: name, photoURL: photoURL })
         AuthStore.update((store) => {
             store.user = auth.currentUser;
             store.isLoggedIn = true;
         });
-        return {user: auth.currentUser};
+        return { user: auth.currentUser };
     } catch (error) {
-        debugger
         console.log(error)
-        return {error: error.message}
+        return { error: error.message }
     }
 }
 
@@ -93,11 +93,15 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
 
         photoURL = await getDownloadURL(storageRef)
 
-        await addDoc(collection(firestore,'users'),{
-            description: description,
-            zipCode: zipCode,
-            isCompany: isCompany
-        })
+
+
+        await setDoc(doc(firestore, "users", user.uid), 
+            {
+                description: description,
+                zipCode: zipCode,
+                isCompany: isCompany
+            }
+        )
             .catch((error) => {
                 console.error("Error writing document: ", error);
             })
@@ -107,6 +111,6 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
     }
 }
 
-registerInDevtools({AuthStore})
+registerInDevtools({ AuthStore })
 
 export { appSignIn, appSignOut, appSignUp }
