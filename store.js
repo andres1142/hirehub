@@ -8,12 +8,13 @@ import {
 } from 'firebase/auth'
 import { app, auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { doc ,collection, setDoc } from "firebase/firestore";
+import { doc ,getDoc, setDoc } from "firebase/firestore";
 
 export const AuthStore = new Store({
     isLoggedIn: false,
     initialized: false,
     user: null,
+    data: null,
 })
 
 const unsub = onAuthStateChanged(auth, (user) => {
@@ -27,6 +28,7 @@ const unsub = onAuthStateChanged(auth, (user) => {
 const appSignIn = async (email, password) => {
     try {
         const result = await signInWithEmailAndPassword(auth, email, password)
+        await setUserData(result.user)
         AuthStore.update((store) => {
             store.user = result.user
             store.isLoggedIn = !!result.user
@@ -44,6 +46,7 @@ const appSignOut = async () => {
 
         AuthStore.update((store) => {
             store.user = null
+            store.data = null
             store.isLoggedIn = false
         })
         return { user: null }
@@ -60,6 +63,9 @@ const appSignUp = async (email, password, name, description, zipCode, isCompany,
         const photoURL = await storeUserData(auth.currentUser, name, description, zipCode, isCompany, profilePic)
         // add the displayName and photoURL to the user
         await updateProfile(result.user, { displayName: name, photoURL: photoURL })
+
+
+        await setUserData(result.user)
         AuthStore.update((store) => {
             store.user = auth.currentUser;
             store.isLoggedIn = true;
@@ -111,6 +117,18 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
     }
 }
 
+const setUserData = async (user) => {
+    try {
+        const userStoredData = await getDoc(doc(firestore, "users", user.uid))
+        AuthStore.update((store) => {
+            store.data = userStoredData.data()
+        })
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
 registerInDevtools({ AuthStore })
 
-export { appSignIn, appSignOut, appSignUp }
+export { appSignIn, appSignOut, appSignUp, setUserData }

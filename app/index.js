@@ -3,7 +3,7 @@ import { useRootNavigationState,
         useRouter,
         useSegments
 } from "expo-router";
-import { AuthStore } from "../store";
+import { AuthStore, setUserData } from "../store";
 import React from "react";
 import { View } from "react-native";
 
@@ -29,6 +29,7 @@ const Index = () => {
             router.replace("/login");
         } else if (isLoggedIn) {
             // go to tabs root.
+            setUserData(AuthStore.getRawState().user);
             router.replace("/(tabs)/home");
         }
     }, [initialized, segments, navigationState?.key]);
