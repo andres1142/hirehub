@@ -5,20 +5,17 @@ import { AuthStore } from "../../store";
 
 import { JobCard } from "./JobCard";
 
-function Resume() {
+function Resume({canEdit}) {
     const [resume, setResume] = useState([])
-
+    
     return (
         <ScrollView
             className={'rounded-xl'}
             showsVerticalScrollIndicator={false}>
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
+            <JobCard canEdit={canEdit}/>
+            <JobCard canEdit={canEdit}/>
+            <JobCard canEdit={canEdit}/>
+            <JobCard canEdit={canEdit}/>
         </ScrollView>
     )
 }

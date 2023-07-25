@@ -1,11 +1,19 @@
 import { useRouter, Stack } from "expo-router";
+import { useState } from "react";
 import { SafeAreaView, Image, View, TouchableOpacity, Text } from "react-native";
 import { AuthStore } from "../../../store";
 import { PlusIcon, PencilIcon } from "react-native-heroicons/solid";
 import { Description, Resume } from "../../../components/profile";
+import { CreateEntry } from "../../../components/profile/modals";
 
 function Index() {
+    const [canEdit, setCanEdit] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const router = useRouter();
+
+    function toggleCreateModal() {
+        setIsCreateModalOpen(!isCreateModalOpen);
+    }
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
@@ -50,13 +58,18 @@ function Index() {
 
                             <View
                                 className={'flex-row justify-between items-center'}>
-                                
+
+                                {/*Create Button*/}
                                 <TouchableOpacity
+                                    onPress={toggleCreateModal}
                                     className={`mx-1 flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
                                     border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
                                     <PlusIcon color={'#9BC8E3'} size={20} />
                                 </TouchableOpacity>
+
+                                {/*Edit Button*/}
                                 <TouchableOpacity
+                                    onPress={() => setCanEdit(!canEdit)}
                                     className={`flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
                                     border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
                                     <PencilIcon color={'#9BC8E3'} size={18} />
@@ -64,13 +77,18 @@ function Index() {
                             </View>
                         </View>
 
-                        <Resume />
+                        <Resume canEdit={canEdit} />
                     </View>
                     : null
                 }
 
-            </View>
+                {/*Create Entry Modal*/
+                    isCreateModalOpen ?
+                        <CreateEntry toggleCreateModal={toggleCreateModal}/>
+                    : null
+                }
 
+            </View>
         </SafeAreaView>
     )
 }
