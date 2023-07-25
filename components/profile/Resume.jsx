@@ -9,17 +9,9 @@ function Resume() {
     const [resume, setResume] = useState([])
 
     return (
-        <ScrollView>
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
-            <JobCard />
+        <ScrollView
+            className={'rounded-xl'}
+            showsVerticalScrollIndicator={false}>
             <JobCard />
             <JobCard />
             <JobCard />

@@ -1,31 +1,34 @@
 import { View, Text } from "react-native";
+import { PencilSquareIcon } from "react-native-heroicons/solid";
 
 function JobCard() {
     return (
-        <View className={'bg-primary my-4 p-3 rounded-lg shadow-lg'}>
+        <View className={'relative bg-primary mx-3 mb-4 p-3 rounded-lg shadow-lg'}>
+            <View className={`absolute -bottom-3 -right-3 flex-none justify-center items-center w-[26px] h-[26px] 
+                            rounded-full border-solid border-0.5 border-secondary shadow-sm shadow-slate-400 bg-white`}>
+                <PencilSquareIcon color={'#9BC8E3'} size={20} />
+            </View>
+
             <View className={'flex-row justify-between'}>
-                <View className={'flex-row'}>
-                    <Text className={'font-bold'}>
-                        Title:
-                    </Text>
-                    <Text>
+                <View className={'flex-row flex-1'}>
+                    <Text style={{ fontFamily: 'MotivaBold' }}
+                        numberOfLines={1}
+                        className={'pb-1'}>
                         Software Engineer
                     </Text>
                 </View>
 
-                <Text>
-                    May: 2021 - Present
+                <Text style={{ fontFamily: 'MotivaLightItalic' }}>
+                    May 2021 - Present
                 </Text>
             </View>
 
-            <View>
-                <Text className={'font-bold'}>
-                    Description:
-                </Text>
-                <Text>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
-                </Text>
-            </View>
+            <Text
+                style={{ fontFamily: 'MotivaLight' }}
+                className={'pb-0.5'}>
+                Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis
+                blanditiis repellendus etur adipisicing elit. Itaque amet indis perferendis blanditiis repellendus.
+            </Text>
 
         </View>
     )
