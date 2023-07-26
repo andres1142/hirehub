@@ -1,6 +1,6 @@
 import { useRouter, Stack } from "expo-router";
 import { useState } from "react";
-import { SafeAreaView, Image, View, TouchableOpacity, Text } from "react-native";
+import { SafeAreaView, Image, View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { AuthStore } from "../../../store";
 import { PlusIcon, PencilIcon } from "react-native-heroicons/solid";
 import { Description, Resume } from "../../../components/profile";
@@ -82,9 +82,10 @@ function Index() {
                     : null
                 }
 
+
                 {/*Create Entry Modal*/
                     isCreateModalOpen ?
-                        <CreateEntry toggleCreateModal={toggleCreateModal}/>
+                        <CreateEntry toggleCreateModal={toggleCreateModal} />
                     : null
                 }
 
