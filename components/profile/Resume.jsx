@@ -1,22 +1,23 @@
-import { ScrollView, View, Text } from "react-native";
+import { FlatList  } from "react-native";
 import { useState, useEffect } from "react";
-import { PencilSquareIcon } from "react-native-heroicons/solid";
 import { AuthStore } from "../../store";
-
 import { JobCard } from "./JobCard";
 
 function Resume({canEdit}) {
-    const [resume, setResume] = useState([])
+    const [data, setData] = useState(AuthStore.getRawState().data.resume)
+
+    useEffect(() => {
+        setData(AuthStore.getRawState().data.resume)
+    }, [AuthStore.getRawState().data.resume])
     
     return (
-        <ScrollView
+        <FlatList
             className={'rounded-xl'}
-            showsVerticalScrollIndicator={false}>
-            <JobCard canEdit={canEdit}/>
-            <JobCard canEdit={canEdit}/>
-            <JobCard canEdit={canEdit}/>
-            <JobCard canEdit={canEdit}/>
-        </ScrollView>
+            showsVerticalScrollIndicator={false}
+            data={data}
+            renderItem={({ item }) => <JobCard canEdit={canEdit} title={item.title} timePeriod={item.date} description={item.description}/>}
+            keyExtractor={item => item.index}
+        />
     )
 }
 

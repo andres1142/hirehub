@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth'
 import { app, auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { doc ,getDoc, setDoc } from "firebase/firestore";
+import { doc ,getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export const AuthStore = new Store({
     isLoggedIn: false,
@@ -105,7 +105,8 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
             {
                 description: description,
                 zipCode: zipCode,
-                isCompany: isCompany
+                isCompany: isCompany,
+                resume: []
             }
         )
             .catch((error) => {
@@ -128,7 +129,28 @@ const setUserData = async (user) => {
     }
 }
 
+const updateResume = async (resume) => {
+    resume.index = AuthStore.getRawState().data.resume.length
+    let updatedResume = []
+    for (let i = 0; i < AuthStore.getRawState().data.resume.length; i++) {
+        updatedResume.push(AuthStore.getRawState().data.resume[i])
+    }
+    updatedResume.push(resume)
+
+    try {
+        await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid),{
+            resume: updatedResume
+        })
+        AuthStore.update((store) => {
+            store.data.resume = updatedResume
+        })
+        console.log(AuthStore.getRawState().data.resume)
+    } catch (e) {
+        console.log(e)
+    } 
+}
+
 
 registerInDevtools({ AuthStore })
 
-export { appSignIn, appSignOut, appSignUp, setUserData }
+export { appSignIn, appSignOut, appSignUp, setUserData, updateResume }
