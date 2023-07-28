@@ -1,19 +1,31 @@
-import { useRouter, Stack } from "expo-router";
-import { useState } from "react";
-import { SafeAreaView, Image, View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { useRouter, useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
+import { SafeAreaView, Image, View, TouchableOpacity, Text } from "react-native";
 import { AuthStore } from "../../../store";
-import { PlusIcon, PencilIcon } from "react-native-heroicons/solid";
+import { PlusIcon, PencilIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { Description, Resume } from "../../../components/profile";
-import { CreateEntry } from "../../../components/profile/modals";
+import { CreateEntry, DiscardChanges } from "../../../components/profile/modals";
 
 function Index() {
     const [canEdit, setCanEdit] = useState(false);
+    const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const router = useRouter();
+    const navigation = useNavigation();
 
     function toggleCreateModal() {
         setIsCreateModalOpen(!isCreateModalOpen);
     }
+
+    function toggleDiscardChanges() {
+        setIsDiscardChangesModalOpen(!isDiscardChangesModalOpen);
+    }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            console.log('blur')
+        })
+        return unsubscribe
+    }, [navigation])
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
@@ -43,7 +55,7 @@ function Index() {
                                 className={'mb-4 text-left text-bold text-xl'}>
                                 About Me:
                             </Text>
-                            <Description />
+                            <Description toggleDiscardChanges={toggleDiscardChanges}/>
                         </View>
                 }
 
@@ -57,23 +69,48 @@ function Index() {
                             </Text>
 
                             <View
-                                className={'flex-row justify-between items-center'}>
+                                className={'flex-none justify-between items-center'}>
 
-                                {/*Create Button*/}
-                                <TouchableOpacity
-                                    onPress={toggleCreateModal}
-                                    className={`mx-1 flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
-                                    border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                    <PlusIcon color={'#9BC8E3'} size={20} />
-                                </TouchableOpacity>
+                                {
+                                    canEdit === false ?
+                                        <View className={'flex-row'}>
+                                            {/*Create Button*/}
+                                            <TouchableOpacity
+                                                onPress={toggleCreateModal}
+                                                className={`mx-1 flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
+                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
+                                                <PlusIcon color={'#9BC8E3'} size={20} />
+                                            </TouchableOpacity>
 
-                                {/*Edit Button*/}
-                                <TouchableOpacity
-                                    onPress={() => setCanEdit(!canEdit)}
-                                    className={`flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
-                                    border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                    <PencilIcon color={'#9BC8E3'} size={18} />
-                                </TouchableOpacity>
+                                            {/*Edit Button*/}
+                                            <TouchableOpacity
+                                                onPress={() => setCanEdit(!canEdit)}
+                                                className={`flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
+                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
+                                                <PencilIcon color={'#9BC8E3'} size={18} />
+                                            </TouchableOpacity>
+                                        </View>
+                                        :
+                                        <View className={'flex-row'}>
+                                            {/*Cancel Button*/}
+                                            <TouchableOpacity
+                                                onPress={toggleDiscardChanges}
+                                                //onPress={() => setCanEdit(!canEdit)}
+                                                className={`mx-1 flex-none justify-center items-center bg-red-400 rounded-full w-[26px] h-[26px]
+                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
+                                                <XMarkIcon color={'white'} size={20} />
+                                            </TouchableOpacity>
+
+                                            {/*Save Button*/}
+                                            <TouchableOpacity
+                                                onPress={() => setCanEdit(!canEdit)}
+                                                className={`flex-none justify-center items-center bg-lime-600 rounded-full w-[26px] h-[26px]
+                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
+                                                <CheckIcon color={'white'} size={18} />
+                                            </TouchableOpacity>
+                                        </View>
+                                }
+
                             </View>
                         </View>
 
@@ -86,9 +123,14 @@ function Index() {
                 {/*Create Entry Modal*/
                     isCreateModalOpen ?
                         <CreateEntry toggleCreateModal={toggleCreateModal} />
-                    : null
+                        : null
                 }
 
+                {/*Discard Charges Modal*/
+                    isDiscardChangesModalOpen ?
+                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} />
+                        : null
+                }
             </View>
         </SafeAreaView>
     )

@@ -15,6 +15,7 @@ export const AuthStore = new Store({
     initialized: false,
     user: null,
     data: null,
+    dataCopy: null,
 })
 
 const unsub = onAuthStateChanged(auth, (user) => {
@@ -47,6 +48,7 @@ const appSignOut = async () => {
         AuthStore.update((store) => {
             store.user = null
             store.data = null
+            store.dataCopy = null
             store.isLoggedIn = false
         })
         return { user: null }
@@ -123,12 +125,14 @@ const setUserData = async (user) => {
         const userStoredData = await getDoc(doc(firestore, "users", user.uid))
         AuthStore.update((store) => {
             store.data = userStoredData.data()
+            store.dataCopy = userStoredData.data()
         })
     } catch (e) {
         console.log(e)
     }
 }
 
+// TODO: Change this function to update all data.
 const updateResume = async (resume) => {
     resume.index = AuthStore.getRawState().data.resume.length
     let updatedResume = []

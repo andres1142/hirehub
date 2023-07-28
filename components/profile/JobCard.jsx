@@ -5,7 +5,7 @@ function JobCard({ canEdit, title, timePeriod, description }) {
     return (
         <View className={'relative bg-primary mx-3 mb-4 p-3 rounded-lg shadow-lg'}>
 
-            {canEdit ?
+            {canEdit === true ?
                 <View className={`absolute -bottom-3 -right-3 flex-row justify-center items-center`}>
                     <View className={`flex-none justify-center items-center mr-1 w-[26px] h-[26px] rounded-full 
                                     border-solid border-0.5 border-secondary shadow-sm shadow-slate-400 bg-red-400`}>
