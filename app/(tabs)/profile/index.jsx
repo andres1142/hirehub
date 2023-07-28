@@ -18,7 +18,9 @@ function Index() {
 
     function toggleDiscardChanges() {
         setIsDiscardChangesModalOpen(!isDiscardChangesModalOpen);
+
     }
+
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('blur', () => {
@@ -26,6 +28,7 @@ function Index() {
         })
         return unsubscribe
     }, [navigation])
+
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
@@ -128,7 +131,7 @@ function Index() {
 
                 {/*Discard Charges Modal*/
                     isDiscardChangesModalOpen ?
-                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} />
+                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges}/>
                         : null
                 }
             </View>

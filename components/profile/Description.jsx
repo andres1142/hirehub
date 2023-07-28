@@ -4,8 +4,14 @@ import { PencilSquareIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/s
 import { AuthStore } from "../../store";
 
 
-function Description({toggleDiscardChanges}) {
+function Description({ toggleDiscardChanges }) {
     const [editing, setEditing] = useState(false)
+
+    function discardDescriptionChanges() {
+        setEditing(false)
+        console.log('Discarding Changes')
+        toggleDiscardChanges()
+    }
 
     return (
         <View className={'relative bg-primary py-2 mx-3 px-3 rounded-xl'}>
@@ -27,7 +33,7 @@ function Description({toggleDiscardChanges}) {
                             <TouchableOpacity
                                 className={`flex-none items-center justify-center bg-black w-[26px] h-[26px] bg-red-400 rounded-full 
                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}
-                                onPress={toggleDiscardChanges}>
+                                onPress={() => discardDescriptionChanges}>
                                 <XMarkIcon color={'white'} size={20} />
                             </TouchableOpacity>
 
