@@ -1,5 +1,6 @@
 import { View, Text, Modal, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { updateResume } from '../../../store';
+import { XMarkIcon } from 'react-native-heroicons/solid'
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
 
@@ -13,7 +14,7 @@ function CreateEntry({ toggleCreateModal }) {
         try {
             await updateResume({ title: title, date: timePeriod, description: description })
             toggleCreateModal()
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         }
     }
@@ -26,7 +27,16 @@ function CreateEntry({ toggleCreateModal }) {
             >
                 <BlurView intensity={40} tint="light" className={'w-full h-full'}>
                     <View className={'flex-1 justify-center items-center'}>
-                        <View className={'bg-primary w-3/4 py-10 flex-none justify-center items-center rounded-xl'}>
+                        <View className={'relative bg-primary w-3/4 py-10 flex-none justify-center items-center rounded-xl'}>
+
+                            {/*Close Button*/}
+                            <View className={'absolute -top-3 -right-3'}>
+                                <TouchableOpacity
+                                    onPress={toggleCreateModal}
+                                    className={'flex-none items-center justify-center w-[30px] h-[30px] bg-red-400 rounded-full'}>
+                                    <XMarkIcon size={24} color={'white'} />
+                                </TouchableOpacity>
+                            </View>
 
                             <View className={'flex-none mb-10'}>
                                 <Text className={'text-xl'} style={{ fontFamily: 'MotivaMedium' }}>

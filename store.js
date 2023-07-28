@@ -144,7 +144,6 @@ const updateResume = async (resume) => {
         AuthStore.update((store) => {
             store.data.resume = updatedResume
         })
-        console.log(AuthStore.getRawState().data.resume)
     } catch (e) {
         console.log(e)
     } 
