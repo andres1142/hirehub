@@ -2,7 +2,7 @@ import { Modal, View, Text, TouchableOpacity } from "react-native";
 import { BlurView } from 'expo-blur';
 
 
-function DiscardChanges({ toggleDiscardChanges, discardChanges, changingSection}) {
+function DiscardChanges({ toggleDiscardChanges, discardChanges}) {
     return (
         <View className={'flex-1 justify-center items-center'}>
             <Modal
@@ -21,7 +21,7 @@ function DiscardChanges({ toggleDiscardChanges, discardChanges, changingSection}
                                 <View className={'flex-row justify-around items-center my-3 '}>
                                     <TouchableOpacity
                                         className={'flex-none justify-center items-center bg-red-400 w-20 h-7 rounded-md shadow-sm shadow-slate-500'}
-                                        onPress={() => discardChanges(changingSection)}>
+                                        onPress={discardChanges}>
                     
                                         <Text className={'text-white'}>Discard</Text>
                                     </TouchableOpacity>

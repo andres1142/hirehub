@@ -58,7 +58,7 @@ function Index() {
                                 className={'mb-4 text-left text-bold text-xl'}>
                                 About Me:
                             </Text>
-                            <Description toggleDiscardChanges={toggleDiscardChanges}/>
+                            <Description/>
                         </View>
                 }
 
@@ -126,12 +126,6 @@ function Index() {
                 {/*Create Entry Modal*/
                     isCreateModalOpen ?
                         <CreateEntry toggleCreateModal={toggleCreateModal} />
-                        : null
-                }
-
-                {/*Discard Charges Modal*/
-                    isDiscardChangesModalOpen ?
-                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges}/>
                         : null
                 }
             </View>

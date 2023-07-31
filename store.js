@@ -14,8 +14,8 @@ export const AuthStore = new Store({
     isLoggedIn: false,
     initialized: false,
     user: null,
-    data: null,
-    dataCopy: null,
+    data: null,    // Can change
+    dataCopy: null, // In case we want to undo changes
 })
 
 const unsub = onAuthStateChanged(auth, (user) => {
@@ -132,6 +132,12 @@ const setUserData = async (user) => {
     }
 }
 
+const updateDescription = async (description) => {
+    AuthStore.update((store) => {
+        store.data.description = description
+    })
+}
+
 // TODO: Change this function to update all data.
 const updateResume = async (resume) => {
     resume.index = AuthStore.getRawState().data.resume.length
@@ -156,4 +162,4 @@ const updateResume = async (resume) => {
 
 registerInDevtools({ AuthStore })
 
-export { appSignIn, appSignOut, appSignUp, setUserData, updateResume }
+export { appSignIn, appSignOut, appSignUp, setUserData, updateResume, updateDescription }
