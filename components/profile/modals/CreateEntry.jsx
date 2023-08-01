@@ -1,5 +1,5 @@
 import { View, Text, Modal, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import { updateResume } from '../../../store';
+import { addResumeEntry } from '../../../store';
 import { XMarkIcon } from 'react-native-heroicons/solid'
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
@@ -10,9 +10,9 @@ function CreateEntry({ toggleCreateModal }) {
     const [timePeriod, setTimePeriod] = useState('')
     const [description, setDescription] = useState('')
 
-    const handleAddEntry = async () => {
-        try {
-            await updateResume({ title: title, date: timePeriod, description: description })
+    const handleAddEntry = () => {
+        try {  
+            addResumeEntry({ title: title, date: timePeriod, description: description })
             toggleCreateModal()
         } catch (e) {
             console.log(e)

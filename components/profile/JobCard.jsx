@@ -3,12 +3,17 @@ import { useState } from "react";
 import { PencilSquareIcon, MinusIcon } from "react-native-heroicons/solid";
 import { RemoveCard } from "./modals/RemoveCard";
 
-function JobCard({ canEdit, title, timePeriod, description }) {
+function JobCard({ canEdit, index, title, timePeriod, description, handleRemoveItem}) {
 
     const [isRemoveCardModalOpen, setRemoveCardModalOpen] = useState(false)
 
     function toggleRemoveModal() {
         setRemoveCardModalOpen(!isRemoveCardModalOpen)
+    }
+
+    function handleRemove() {
+        toggleRemoveModal()
+        handleRemoveItem(index)
     }
 
     return (
@@ -53,7 +58,7 @@ function JobCard({ canEdit, title, timePeriod, description }) {
             {
                 /*Discard Charges Modal*/
                 isRemoveCardModalOpen ?
-                    <RemoveCard toggleRemoveModal={toggleRemoveModal} />
+                    <RemoveCard toggleRemoveModal={toggleRemoveModal} handleRemove={handleRemove}/>
                     : null
             }
         </View>

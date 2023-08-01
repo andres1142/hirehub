@@ -1,13 +1,14 @@
-import { useRouter, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, Image, View, TouchableOpacity, Text } from "react-native";
-import { AuthStore } from "../../../store";
+import { AuthStore, updateResume, updateData } from "../../../store";
 import { PlusIcon, PencilIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { Description, Resume } from "../../../components/profile";
 import { CreateEntry, DiscardChanges } from "../../../components/profile/modals";
 
 function Index() {
     const [canEdit, setCanEdit] = useState(false);
+    const [resumeList, setResumeList] = useState(AuthStore.getRawState().data?.resume);
     const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const navigation = useNavigation();
@@ -21,14 +22,29 @@ function Index() {
 
     }
 
+    function discardChanges() {
+        setResumeList(AuthStore.getRawState().data?.resume);
+        setCanEdit(false);
+        toggleDiscardChanges();
+    }
 
+    function saveResumeChanges() {
+        setCanEdit(false);
+        updateResume(resumeList);
+    }
+
+    //Listsns when the user changes to a different tab. This will upload all the changes if they are different to the database
     useEffect(() => {
         const unsubscribe = navigation.addListener('blur', () => {
-            console.log('blur')
+            updateData()
         })
         return unsubscribe
     }, [navigation])
 
+    // Updates the resumeList when the user updates their resume
+    useEffect(() => {
+        setResumeList(AuthStore.getRawState().data?.resume)
+    },[AuthStore.getRawState().data?.resume])
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
@@ -58,7 +74,7 @@ function Index() {
                                 className={'mb-4 text-left text-bold text-xl'}>
                                 About Me:
                             </Text>
-                            <Description/>
+                            <Description />
                         </View>
                 }
 
@@ -98,7 +114,6 @@ function Index() {
                                             {/*Cancel Button*/}
                                             <TouchableOpacity
                                                 onPress={toggleDiscardChanges}
-                                                //onPress={() => setCanEdit(!canEdit)}
                                                 className={`mx-1 flex-none justify-center items-center bg-red-400 rounded-full w-[26px] h-[26px]
                                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
                                                 <XMarkIcon color={'white'} size={20} />
@@ -106,7 +121,7 @@ function Index() {
 
                                             {/*Save Button*/}
                                             <TouchableOpacity
-                                                onPress={() => setCanEdit(!canEdit)}
+                                                onPress={saveResumeChanges}
                                                 className={`flex-none justify-center items-center bg-lime-600 rounded-full w-[26px] h-[26px]
                                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
                                                 <CheckIcon color={'white'} size={18} />
@@ -117,7 +132,7 @@ function Index() {
                             </View>
                         </View>
 
-                        <Resume canEdit={canEdit} />
+                        <Resume canEdit={canEdit} resumeList={resumeList} setResumeList={setResumeList}/>
                     </View>
                     : null
                 }
@@ -125,7 +140,14 @@ function Index() {
 
                 {/*Create Entry Modal*/
                     isCreateModalOpen ?
-                        <CreateEntry toggleCreateModal={toggleCreateModal} />
+                        <CreateEntry toggleCreateModal={toggleCreateModal}/>
+                        : null
+                }
+
+                {
+                    /*Discard Charges Modal*/
+                    isDiscardChangesModalOpen ?
+                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} discardChanges={discardChanges}/>
                         : null
                 }
             </View>

@@ -2,7 +2,7 @@ import { View, Modal, Text, TouchableOpacity } from "react-native";
 import { BlurView } from 'expo-blur';
 
 
-function RemoveCard({ toggleRemoveModal }) {
+function RemoveCard({ toggleRemoveModal, handleRemove }) {
     return (
         <View className={'flex-1 justify-center items-center'}>
             <Modal
@@ -19,14 +19,14 @@ function RemoveCard({ toggleRemoveModal }) {
                                 </Text>
 
                                 <View className={'flex-row justify-around items-center my-3 '}>
-                                    {/*Remove Button: It will reset the state of Description*/}
+                                    {/*Remove Button: It will remove the current item*/}
                                     <TouchableOpacity
                                         className={'flex-none justify-center items-center bg-red-400 w-20 h-7 rounded-md shadow-sm shadow-slate-500'}
-                                        onPress={toggleRemoveModal}>
+                                        onPress={handleRemove}>
 
                                         <Text className={'text-white'}>Remove</Text>
                                     </TouchableOpacity>
-                                    {/*Cancel Button: It will close Discard toggle*/}
+                                    {/*Cancel Button: It will close Remove toggle*/}
                                     <TouchableOpacity
                                         className={'flex-none justify-center items-center bg-slate-500 w-20 h-7 rounded-md shadow-sm shadow-slate-500'}
                                         onPress={toggleRemoveModal}>
@@ -41,7 +41,6 @@ function RemoveCard({ toggleRemoveModal }) {
             </Modal>
         </View>
     )
-
 }
 
 export { RemoveCard }
