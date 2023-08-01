@@ -1,7 +1,7 @@
 import { View, TextInput, TouchableOpacity } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PencilSquareIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
-import { AuthStore, undoDescriptionChanges, updateDescription } from "../../store";
+import { AuthStore, updateDescription } from "../../store";
 import { DiscardChanges } from "./modals";
 
 
@@ -11,25 +11,28 @@ function Description() {
     const [editing, setEditing] = useState(false)
 
 
-    useEffect(() => {
-        setDescription(AuthStore.getRawState().data?.description)
-    }, [AuthStore.getRawState().data])
-
-
+    // Modal Functions: Discard Changes
     function toggleDiscardChanges() {
         setIsDiscardChangesModalOpen(!isDiscardChangesModalOpen)
     }
 
+    /**
+     * This function is called when the user presses the "Discard" button in the Discard Changes modal.
+     */
     function discardChanges() {
-        setEditing(!editing)
-        undoDescriptionChanges()
+        setDescription(AuthStore.getRawState().data?.description)
+        setEditing(false)
         toggleDiscardChanges()
     }
 
+    /**  
+     *  This function is called when the user presses the "Save" button in the Discard Changes modal. 
+     */
     function saveChanges() {
         updateDescription(description)
         setEditing(!editing)
     }
+
     return (
         <View className={'relative bg-primary py-2 mx-3 px-3 rounded-xl'}>
 
@@ -38,7 +41,7 @@ function Description() {
                     editing === false ?
                         <View>
                             <TouchableOpacity
-                                className={`flex-none items-center justify-center bg-black w-[26px] h-[26px] bg-white rounded-full 
+                                className={`flex-none items-center justify-center w-[26px] h-[26px] bg-white rounded-full 
                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}
                                 onPress={() => setEditing(!editing)}>
                                 <PencilSquareIcon color={'#9BC8E3'} size={20} />
@@ -48,7 +51,7 @@ function Description() {
                         <View className={'flex-row'}>
                             {/*Cancel Button*/}
                             <TouchableOpacity
-                                className={`flex-none items-center justify-center bg-black w-[26px] h-[26px] bg-red-400 rounded-full 
+                                className={`flex-none items-center justify-center w-[26px] h-[26px] bg-red-400 rounded-full 
                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}
                                 onPress={toggleDiscardChanges}>
                                 <XMarkIcon color={'white'} size={20} />
@@ -56,7 +59,7 @@ function Description() {
 
                             {/*Save Button*/}
                             <TouchableOpacity
-                                className={`flex-none ml-1 items-center justify-center bg-black w-[26px] h-[26px] bg-lime-600 rounded-full 
+                                className={`flex-none ml-1 items-center justify-center w-[26px] h-[26px] bg-lime-600 rounded-full 
                                             border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}
                                 onPress={saveChanges}>
                                 <CheckIcon color={'white'} size={20} />
@@ -69,13 +72,14 @@ function Description() {
             <TextInput
                 className={'p-0'}
                 editable={editing}
+                value={description}
+                onChangeText={text => setDescription(text)}
                 multiline={true}
-                style={{ fontFamily: 'MotivaThin' }}>
-                {description}
-            </TextInput>
+                style={{ fontFamily: 'MotivaThin' }} />
 
 
-            {/*Discard Charges Modal*/
+            {
+                /*Discard Charges Modal*/
                 isDiscardChangesModalOpen ?
                     <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} discardChanges={discardChanges} />
                     : null

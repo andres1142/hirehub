@@ -6,9 +6,9 @@ import {
     signOut,
     updateProfile
 } from 'firebase/auth'
-import { app, auth, firestore, storage } from './config/firebase.config'
+import { auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { doc ,getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export const AuthStore = new Store({
     isLoggedIn: false,
@@ -103,7 +103,7 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
 
 
 
-        await setDoc(doc(firestore, "users", user.uid), 
+        await setDoc(doc(firestore, "users", user.uid),
             {
                 description: description,
                 zipCode: zipCode,
@@ -138,7 +138,9 @@ const updateDescription = async (description) => {
     })
 }
 
-// TODO: Change this function to update all data.
+
+
+// TODO: Change this function to update all data on storage.
 const updateResume = async (resume) => {
     resume.index = AuthStore.getRawState().data.resume.length
     let updatedResume = []
@@ -148,7 +150,7 @@ const updateResume = async (resume) => {
     updatedResume.push(resume)
 
     try {
-        await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid),{
+        await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid), {
             resume: updatedResume
         })
         AuthStore.update((store) => {
@@ -156,7 +158,7 @@ const updateResume = async (resume) => {
         })
     } catch (e) {
         console.log(e)
-    } 
+    }
 }
 
 

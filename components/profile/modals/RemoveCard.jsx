@@ -1,8 +1,8 @@
-import { Modal, View, Text, TouchableOpacity } from "react-native";
+import { View, Modal, Text, TouchableOpacity } from "react-native";
 import { BlurView } from 'expo-blur';
 
 
-function DiscardChanges({ toggleDiscardChanges, discardChanges}) {
+function RemoveCard({ toggleRemoveModal }) {
     return (
         <View className={'flex-1 justify-center items-center'}>
             <Modal
@@ -15,23 +15,23 @@ function DiscardChanges({ toggleDiscardChanges, discardChanges}) {
 
                             <View className={'flex-none'}>
                                 <Text className={'text-lg text-center'} style={{ fontFamily: 'MotivaLight' }}>
-                                    Are you sure you want to discard your changes?
+                                    Are you sure you want to remove this item?
                                 </Text>
 
                                 <View className={'flex-row justify-around items-center my-3 '}>
-                                    {/*Discard Button: It will reset the state of Description*/}
+                                    {/*Remove Button: It will reset the state of Description*/}
                                     <TouchableOpacity
                                         className={'flex-none justify-center items-center bg-red-400 w-20 h-7 rounded-md shadow-sm shadow-slate-500'}
-                                        onPress={discardChanges}>
-                    
-                                        <Text className={'text-white'}>Discard</Text>
+                                        onPress={toggleRemoveModal}>
+
+                                        <Text className={'text-white'}>Remove</Text>
                                     </TouchableOpacity>
-                                    {/*Continue Button: It will close Discard toggle*/}
+                                    {/*Cancel Button: It will close Discard toggle*/}
                                     <TouchableOpacity
                                         className={'flex-none justify-center items-center bg-slate-500 w-20 h-7 rounded-md shadow-sm shadow-slate-500'}
-                                        onPress={toggleDiscardChanges}>
+                                        onPress={toggleRemoveModal}>
 
-                                        <Text className={'text-white'}>Continue</Text>
+                                        <Text className={'text-white'}>Cancel</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -41,6 +41,7 @@ function DiscardChanges({ toggleDiscardChanges, discardChanges}) {
             </Modal>
         </View>
     )
+
 }
 
-export default DiscardChanges;
+export { RemoveCard }
