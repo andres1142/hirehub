@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, TextInput } from "react-native";
 import { useState } from "react";
 import { PencilSquareIcon, MinusIcon } from "react-native-heroicons/solid";
 import { RemoveCard } from "./modals/RemoveCard";
@@ -41,6 +41,7 @@ function JobCard({ canEdit, index, title, timePeriod, description, handleRemoveI
 
             <View className={'flex-row justify-between'}>
                 <View className={'flex-row flex-1'}>
+
                     <Text style={{ fontFamily: 'MotivaBold' }} numberOfLines={1} className={'pb-1'}>
                         {title}
                     </Text>

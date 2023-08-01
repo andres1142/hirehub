@@ -1,14 +1,19 @@
 import { View, TextInput, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useNavigation } from "expo-router";
+import { useState, useEffect } from "react";
 import { PencilSquareIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { AuthStore, updateDescription } from "../../store";
 import { DiscardChanges } from "./modals";
 
 
 function Description() {
+    const navigation = useNavigation()
+
     const [description, setDescription] = useState(AuthStore.getRawState().data?.description)
     const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
     const [editing, setEditing] = useState(false)
+
+
 
 
     // Modal Functions: Discard Changes
@@ -32,6 +37,16 @@ function Description() {
         updateDescription(description)
         setEditing(!editing)
     }
+
+
+    //Listens when the user changes to a different tab. This will upload all the changes if they are different to the database
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('blur', () => {
+            setEditing(false);
+        })
+        return unsubscribe
+    }, [navigation])
+
 
     return (
         <View className={'relative bg-primary py-2 mx-3 px-3 rounded-xl'}>

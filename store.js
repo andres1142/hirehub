@@ -234,7 +234,6 @@ const addResumeEntry = (resume) => {
  */
 
 const updateData = async () => {
-    debugger
     if (JSON.stringify(AuthStore.getRawState().data) !== JSON.stringify(AuthStore.getRawState().dataCopy)) {
         try {
             await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid), {

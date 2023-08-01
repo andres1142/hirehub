@@ -1,6 +1,4 @@
 import { FlatList } from "react-native";
-import { useState, useEffect } from "react";
-import { AuthStore } from "../../store";
 import { JobCard } from "./JobCard";
 
 function Resume({ canEdit, resumeList, setResumeList }) {

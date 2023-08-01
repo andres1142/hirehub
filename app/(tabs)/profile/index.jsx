@@ -33,10 +33,11 @@ function Index() {
         updateResume(resumeList);
     }
 
-    //Listsns when the user changes to a different tab. This will upload all the changes if they are different to the database
+    //Listens when the user changes to a different tab. This will upload all the changes if they are different to the database
     useEffect(() => {
         const unsubscribe = navigation.addListener('blur', () => {
             updateData()
+            setCanEdit(false);
         })
         return unsubscribe
     }, [navigation])
@@ -44,17 +45,25 @@ function Index() {
     // Updates the resumeList when the user updates their resume
     useEffect(() => {
         setResumeList(AuthStore.getRawState().data?.resume)
-    },[AuthStore.getRawState().data?.resume])
+    }, [AuthStore.getRawState().data?.resume])
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
 
             <View className={'flex-none mx-7 mt-10 items-center'}>
-                <View className={'w-34 h-34 flex-none justify-center items-center rounded-full border-4 border-primary'}>
+                <View className={'relatieve w-34 h-34 flex-none justify-center items-center rounded-full border-4 border-primary overflow-hidden'}>
                     <Image
                         className={'w-32 h-32 bg-primary rounded-full'}
                         source={{ uri: AuthStore.getRawState().user?.photoURL }}
-                    />
+                    /> 
+                    {/*Edit picture Button*/}
+                    <TouchableOpacity className={'absolute bottom-0 w-full h-6 bg-black opacity-60'}>
+                        <Text
+                            className={'text-white text-center text-sm leading-6'}
+                            style={{ fontFamily: 'MotivaMedium' }}>
+                            Edit
+                        </Text>
+                    </TouchableOpacity>
                 </View>
                 <Text
                     style={{ fontFamily: 'MotivaMedium' }}
@@ -132,7 +141,7 @@ function Index() {
                             </View>
                         </View>
 
-                        <Resume canEdit={canEdit} resumeList={resumeList} setResumeList={setResumeList}/>
+                        <Resume canEdit={canEdit} resumeList={resumeList} setResumeList={setResumeList} />
                     </View>
                     : null
                 }
@@ -140,14 +149,14 @@ function Index() {
 
                 {/*Create Entry Modal*/
                     isCreateModalOpen ?
-                        <CreateEntry toggleCreateModal={toggleCreateModal}/>
+                        <CreateEntry toggleCreateModal={toggleCreateModal} />
                         : null
                 }
 
                 {
                     /*Discard Charges Modal*/
                     isDiscardChangesModalOpen ?
-                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} discardChanges={discardChanges}/>
+                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} discardChanges={discardChanges} />
                         : null
                 }
             </View>
