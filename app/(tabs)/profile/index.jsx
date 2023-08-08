@@ -1,61 +1,19 @@
-import { useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
 import { SafeAreaView, Image, View, TouchableOpacity, Text } from "react-native";
-import { AuthStore, updateResume, updateData } from "../../../store";
-import { PlusIcon, PencilIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
+import { AuthStore } from "../../../store";
 import { Description, Resume } from "../../../components/profile";
-import { CreateEntry, DiscardChanges } from "../../../components/profile/modals";
 
 function Index() {
-    const [canEdit, setCanEdit] = useState(false);
-    const [resumeList, setResumeList] = useState(AuthStore.getRawState().data?.resume);
-    const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false);
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const navigation = useNavigation();
-
-    function toggleCreateModal() {
-        setIsCreateModalOpen(!isCreateModalOpen);
-    }
-
-    function toggleDiscardChanges() {
-        setIsDiscardChangesModalOpen(!isDiscardChangesModalOpen);
-
-    }
-
-    function discardChanges() {
-        setResumeList(AuthStore.getRawState().data?.resume);
-        setCanEdit(false);
-        toggleDiscardChanges();
-    }
-
-    function saveResumeChanges() {
-        setCanEdit(false);
-        updateResume(resumeList);
-    }
-
-    //Listens when the user changes to a different tab. This will upload all the changes if they are different to the database
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('blur', () => {
-            updateData()
-            setCanEdit(false);
-        })
-        return unsubscribe
-    }, [navigation])
-
-    // Updates the resumeList when the user updates their resume
-    useEffect(() => {
-        setResumeList(AuthStore.getRawState().data?.resume)
-    }, [AuthStore.getRawState().data?.resume])
 
     return (
         <SafeAreaView className={'flex-auto bg-secondary'}>
 
             <View className={'flex-none mx-7 mt-10 items-center'}>
+                {/*Profile Picture*/}
                 <View className={'relatieve w-34 h-34 flex-none justify-center items-center rounded-full border-4 border-primary overflow-hidden'}>
                     <Image
                         className={'w-32 h-32 bg-primary rounded-full'}
                         source={{ uri: AuthStore.getRawState().user?.photoURL }}
-                    /> 
+                    />
                     {/*Edit picture Button*/}
                     <TouchableOpacity className={'absolute bottom-0 w-full h-6 bg-black opacity-60'}>
                         <Text
@@ -65,6 +23,7 @@ function Index() {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                {/* Company or User Name*/}
                 <Text
                     style={{ fontFamily: 'MotivaMedium' }}
                     className={'text-white my-5 text-3xl'}>
@@ -72,6 +31,7 @@ function Index() {
                 </Text>
 
                 {
+                    /*Company Description or About me*/
                     AuthStore.getRawState().data?.isCompany ?
                         <Text>
                             Company Description:
@@ -87,76 +47,11 @@ function Index() {
                         </View>
                 }
 
-                {!AuthStore.getRawState().data?.isCompany ?
-                    <View className={'w-full h-[360px]'}>
-                        <View className={'mb-4 flex-row justify-between'}>
-                            <Text
-                                style={{ fontFamily: 'MotivaRegular' }}
-                                className={'text-left text-bold text-xl'}>
-                                Previous Experience:
-                            </Text>
-
-                            <View
-                                className={'flex-none justify-between items-center'}>
-
-                                {
-                                    canEdit === false ?
-                                        <View className={'flex-row'}>
-                                            {/*Create Button*/}
-                                            <TouchableOpacity
-                                                onPress={toggleCreateModal}
-                                                className={`mx-1 flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
-                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                                <PlusIcon color={'#9BC8E3'} size={20} />
-                                            </TouchableOpacity>
-
-                                            {/*Edit Button*/}
-                                            <TouchableOpacity
-                                                onPress={() => setCanEdit(!canEdit)}
-                                                className={`flex-none justify-center items-center bg-white rounded-full w-[26px] h-[26px]
-                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                                <PencilIcon color={'#9BC8E3'} size={18} />
-                                            </TouchableOpacity>
-                                        </View>
-                                        :
-                                        <View className={'flex-row'}>
-                                            {/*Cancel Button*/}
-                                            <TouchableOpacity
-                                                onPress={toggleDiscardChanges}
-                                                className={`mx-1 flex-none justify-center items-center bg-red-400 rounded-full w-[26px] h-[26px]
-                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                                <XMarkIcon color={'white'} size={20} />
-                                            </TouchableOpacity>
-
-                                            {/*Save Button*/}
-                                            <TouchableOpacity
-                                                onPress={saveResumeChanges}
-                                                className={`flex-none justify-center items-center bg-lime-600 rounded-full w-[26px] h-[26px]
-                                                            border-solid border-0.5 border-secondary shadow-sm shadow-slate-400`}>
-                                                <CheckIcon color={'white'} size={18} />
-                                            </TouchableOpacity>
-                                        </View>
-                                }
-
-                            </View>
-                        </View>
-
-                        <Resume canEdit={canEdit} resumeList={resumeList} setResumeList={setResumeList} />
-                    </View>
-                    : null
-                }
-
-
-                {/*Create Entry Modal*/
-                    isCreateModalOpen ?
-                        <CreateEntry toggleCreateModal={toggleCreateModal} />
-                        : null
-                }
 
                 {
-                    /*Discard Charges Modal*/
-                    isDiscardChangesModalOpen ?
-                        <DiscardChanges toggleDiscardChanges={toggleDiscardChanges} discardChanges={discardChanges} />
+                    /* Shows company set up or user resume*/
+                    !AuthStore.getRawState().data?.isCompany ?
+                        <Resume />
                         : null
                 }
             </View>
