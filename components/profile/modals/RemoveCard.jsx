@@ -43,4 +43,4 @@ function RemoveCard({ toggleRemoveModal, handleRemove }) {
     )
 }
 
-export { RemoveCard }
+export default RemoveCard;

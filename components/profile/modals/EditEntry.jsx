@@ -1,23 +1,13 @@
 import { View, Text, Modal, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import { addResumeEntry } from '../../../store';
 import { XMarkIcon } from 'react-native-heroicons/solid'
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
 
 
-function CreateEntry({ toggleCreateModal }) {
-    const [title, setTitle] = useState('')
-    const [timePeriod, setTimePeriod] = useState('')
-    const [description, setDescription] = useState('')
-
-    const handleAddEntry = () => {
-        try {  
-            addResumeEntry({ title: title, date: timePeriod, description: description })
-            toggleCreateModal()
-        } catch (e) {
-            console.log(e)
-        }
-    }
+function EditEntry({ toggleEditEntryModal, handleSaveEditEntry, title, timePeriod, description }) {
+    const [displayTitle, setDisplayTitle] = useState(title)
+    const [displayTimePeriod, setDisplayTimePeriod] = useState(timePeriod)
+    const [displayDescription, setDisplayDescription] = useState(description)
 
     return (
         <View className={'flex-1 justify-center items-center'}>
@@ -32,7 +22,7 @@ function CreateEntry({ toggleCreateModal }) {
                             {/*Close Button*/}
                             <View className={'absolute -top-3 -right-3'}>
                                 <TouchableOpacity
-                                    onPress={toggleCreateModal}
+                                    onPress={toggleEditEntryModal}
                                     className={'flex-none items-center justify-center w-[30px] h-[30px] bg-red-400 rounded-full'}>
                                     <XMarkIcon size={24} color={'white'} />
                                 </TouchableOpacity>
@@ -40,33 +30,33 @@ function CreateEntry({ toggleCreateModal }) {
 
                             <View className={'flex-none mb-10'}>
                                 <Text className={'text-xl'} style={{ fontFamily: 'MotivaMedium' }}>
-                                    Add Experience
+                                    Edit Experience
                                 </Text>
                             </View>
 
                             <TextInput
                                 style={styles.generalFont}
                                 className={'mb-6 px-3 h-9 w-5/6 bg-white rounded-xl shadow-sm shadow-slate-500'}
-                                placeholder={'Title'}
+                                placeholder={displayTitle}
                                 placeholderTextColor={'gray'}
-                                value={title}
-                                onChangeText={text => setTitle(text)}
+                                value={displayTitle}
+                                onChangeText={setDisplayTitle}
                             />
                             <TextInput
                                 style={styles.generalFont}
                                 className={'mb-6 px-3 h-9 w-5/6 bg-white rounded-xl shadow-sm shadow-slate-500'}
-                                placeholder={'Time (e.g. May 2021 - Present)'}
+                                placeholder={displayTimePeriod}
                                 placeholderTextColor={'gray'}
-                                value={timePeriod}
-                                onChangeText={text => setTimePeriod(text)}
+                                value={displayTimePeriod}
+                                onChangeText={setDisplayTimePeriod}
                             />
                             <TextInput
                                 style={styles.generalFont}
                                 className={'mb-6 px-3 h-20 w-5/6 bg-white rounded-xl shadow-sm shadow-slate-500'}
-                                placeholder={'Short Description'}
+                                placeholder={displayDescription}
                                 placeholderTextColor={'gray'}
-                                value={description}
-                                onChangeText={text => setDescription(text)}
+                                value={displayDescription}
+                                onChangeText={setDisplayDescription}
                                 blurOnSubmit={true}
                                 numberOfLines={3}
                                 multiline
@@ -74,10 +64,10 @@ function CreateEntry({ toggleCreateModal }) {
 
                             <TouchableOpacity
                                 className={'bg-lime-600 px-3 py-1 rounded-lg shadow-sm shadow-slate-500'}
-                                onPress={handleAddEntry}
+                                onPress={() => handleSaveEditEntry(displayTitle, displayTimePeriod, displayDescription)}
                             >
                                 <Text className={'text-primary'}>
-                                    Add
+                                    Save Changes
                                 </Text>
                             </TouchableOpacity>
 
@@ -95,4 +85,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CreateEntry;
+export default EditEntry;

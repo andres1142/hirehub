@@ -1,19 +1,35 @@
-import { View, TouchableOpacity, Text, TextInput } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { useState } from "react";
 import { PencilSquareIcon, MinusIcon } from "react-native-heroicons/solid";
-import { RemoveCard } from "./modals/RemoveCard";
+import { RemoveCard, EditEntry } from "./modals";
 
-function JobCard({ canEdit, index, title, timePeriod, description, handleRemoveItem}) {
+function JobCard({ resumeList, setResumeList, canEdit, index, title, timePeriod, description, handleRemoveItem }) {
 
     const [isRemoveCardModalOpen, setRemoveCardModalOpen] = useState(false)
+    const [isEditEntryModalOpen, setEditEntryModalOpen] = useState(false)
 
     function toggleRemoveModal() {
         setRemoveCardModalOpen(!isRemoveCardModalOpen)
     }
 
+    function toggleEditEntryModal() {
+        setEditEntryModalOpen(!isEditEntryModalOpen)
+    }
+
     function handleRemove() {
         toggleRemoveModal()
         handleRemoveItem(index)
+    }
+
+    function handleSaveEditEntry(newTitle, newTimePeriod, newDescription) {
+        toggleEditEntryModal()
+        let temp = []
+        // Creates an array version of the data 
+        for (let i = 0; i < resumeList.length; i++) {
+            temp.push({ ...resumeList[i] })
+        }
+        temp[index] = {...resumeList[index], title: newTitle, date: newTimePeriod, description: newDescription }
+        setResumeList(temp)
     }
 
     return (
@@ -31,7 +47,7 @@ function JobCard({ canEdit, index, title, timePeriod, description, handleRemoveI
                     {/*Edit Card Button*/}
                     <TouchableOpacity className={`flex-none justify-center items-center w-[26px] h-[26px] rounded-full border-solid  
                                     border-0.5 border-secondary shadow-sm shadow-slate-400 bg-white`}
-                        onPress={toggleRemoveModal}>
+                        onPress={toggleEditEntryModal}>
 
                         <PencilSquareIcon color={'#9BC8E3'} size={20} />
                     </TouchableOpacity>
@@ -59,7 +75,13 @@ function JobCard({ canEdit, index, title, timePeriod, description, handleRemoveI
             {
                 /*Discard Charges Modal*/
                 isRemoveCardModalOpen ?
-                    <RemoveCard toggleRemoveModal={toggleRemoveModal} handleRemove={handleRemove}/>
+                    <RemoveCard toggleRemoveModal={toggleRemoveModal} handleRemove={handleRemove} />
+                    : null
+            }
+            {
+                /*EditEntry Modal*/
+                isEditEntryModalOpen ?
+                    <EditEntry toggleEditEntryModal={toggleEditEntryModal} handleSaveEditEntry={handleSaveEditEntry} title={title} timePeriod={timePeriod} description={description} />
                     : null
             }
         </View>

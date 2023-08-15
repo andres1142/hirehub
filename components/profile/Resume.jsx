@@ -56,11 +56,10 @@ function Resume() {
         return unsubscribe
     }, [navigation])
 
-    // Updates the resumeList when the user updates their resume
+    // Updates the resumeList when the user adds an entry
     useEffect(() => {
         setResumeList(AuthStore.getRawState().data?.resume)
     }, [AuthStore.getRawState().data?.resume])
-
 
     return (
         <View className={'w-full h-[360px]'}>
@@ -135,6 +134,8 @@ function Resume() {
                 data={resumeList}
                 renderItem={({ item }) =>
                     <JobCard
+                        resumeList={resumeList}
+                        setResumeList={setResumeList}
                         canEdit={canEdit}
                         index={item.index}
                         title={item.title}
