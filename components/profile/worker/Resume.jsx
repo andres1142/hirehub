@@ -1,9 +1,9 @@
 import { useNavigation } from "expo-router";
-import { AuthStore, updateResume, updateData } from "../../store";
+import { AuthStore, updateResume, updateData } from "../../../store";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { PlusIcon, PencilIcon, CheckIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { useEffect, useState } from "react";
-import { CreateEntry, DiscardChanges } from "./modals";
+import { CreateEntry, DiscardChanges } from "./../modals";
 import { JobCard } from "./JobCard";
 
 function Resume() {
@@ -150,4 +150,4 @@ function Resume() {
     )
 }
 
-export { Resume }
+export { Resume };

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Dimensions, SafeAreaView, StyleSheet } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { UserIcon, HomeIcon, ChatBubbleBottomCenterTextIcon } from "react-native-heroicons/outline"
 
 const width = Dimensions.get('window').width
@@ -9,7 +9,7 @@ const TAB_WIDTH = TAB_BAR_WIDTH / 3
 
 const TabsLayout = () => {
     return (
-        <SafeAreaView className={'flex-1 bg-secondary'}>
+        <View className={'flex-1 pb-8 bg-secondary'}>
             <Tabs
                 screenOptions={{
                     headerShown: false,
@@ -42,7 +42,7 @@ const TabsLayout = () => {
                 />
 
             </Tabs>
-        </SafeAreaView>
+        </View>
     )
 }
 
