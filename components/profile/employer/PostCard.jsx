@@ -1,9 +1,11 @@
 import { View, Text } from 'react-native';
 
-function PostCard() {
+function PostCard({ description, applicants, title}) {
     return (
         <View>
-            <Text>This is a post</Text>
+            <Text>{title}</Text>
+            <Text>{description}</Text>
+            <Text>{applicants}</Text>
         </View>
     )
 }
