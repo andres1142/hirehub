@@ -1,11 +1,12 @@
 import { Image, ImageBackground, View, TouchableOpacity, Text } from "react-native";
+import { PencilIcon } from "react-native-heroicons/solid";
 import { AuthStore } from "../../../store";
-import { Description, Resume } from "../../../components/profile";
+import { Description, Resume, PreviousPosts} from "../../../components/profile";
 
 function Index() {
-        
-    const image = {uri: 'https://legacy.reactjs.org/logo-og.png'};
-    
+
+    const image = { uri: 'https://legacy.reactjs.org/logo-og.png' };
+
     return (
         <View className={'flex-auto bg-secondary'}>
             <View className={'flex-none mx-7 items-center'}>
@@ -26,10 +27,10 @@ function Index() {
                             </TouchableOpacity>
                         </View>
                         :
-                        <ImageBackground 
+                        <ImageBackground
                             source={image}
                             resizeMode="cover"
-                            imageStyle={{ height: '100%',}}
+                            imageStyle={{ height: '100%', }}
                             className={'relative mb-14 bg-primary h-2/5 w-screen'}>
                             <View className={'absolute -bottom-16 w-screen flex-none items-center'}>
                                 {/*Image container*/}
@@ -38,7 +39,7 @@ function Index() {
                                         className={'w-32 h-32 bg-primary rounded-full'}
                                         source={{ uri: AuthStore.getRawState().user?.photoURL }}
                                     />
-                                    {/*Edit picture Button*/}
+                                    {/*Edit Profile picture picture Button*/}
                                     <TouchableOpacity className={'absolute bottom-0 w-full h-6 bg-black opacity-60'}>
                                         <Text
                                             className={'text-white text-center text-sm leading-6'}
@@ -47,6 +48,15 @@ function Index() {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
+                            </View>
+
+                            {/*Edit Banner Button*/}
+                            <View className={'h-full w-full overflow-hidden'}>
+                                <TouchableOpacity className={'absolute -bottom-10 -right-10 rotate-45 bg-black opacity-60 w-20 h-20'}>
+                                    <View className={' absolute top-7 left-1 -rotate-45'}>
+                                        <PencilIcon color={'white'}/>
+                                    </View>
+                                </TouchableOpacity>
                             </View>
                         </ImageBackground>
                 }
@@ -84,7 +94,8 @@ function Index() {
                     /* Shows company set up or user resume*/
                     !AuthStore.getRawState().data?.isCompany ?
                         <Resume />
-                        : null
+                        :
+                        <PreviousPosts />
                 }
             </View>
         </View>
