@@ -1,7 +1,7 @@
 import { Image, ImageBackground, View, TouchableOpacity, Text } from "react-native";
 import { PencilIcon } from "react-native-heroicons/solid";
 import { AuthStore } from "../../../store";
-import { Description, Resume, PreviousPosts} from "../../../components/profile";
+import { Description, Resume, PreviousPosts } from "../../../components/profile";
 
 function Index() {
 
@@ -31,7 +31,7 @@ function Index() {
                             source={image}
                             resizeMode="cover"
                             imageStyle={{ height: '100%', }}
-                            className={'relative mb-14 bg-primary h-2/5 w-screen'}>
+                            className={'relative mb-14 bg-primary h-52 w-screen'}>
                             <View className={'absolute -bottom-16 w-screen flex-none items-center'}>
                                 {/*Image container*/}
                                 <View className={'w-32 h-32 rounded-full overflow-hidden'}>
@@ -54,7 +54,7 @@ function Index() {
                             <View className={'h-full w-full overflow-hidden'}>
                                 <TouchableOpacity className={'absolute -bottom-10 -right-10 rotate-45 bg-black opacity-60 w-20 h-20'}>
                                     <View className={' absolute top-7 left-1 -rotate-45'}>
-                                        <PencilIcon color={'white'}/>
+                                        <PencilIcon color={'white'} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -67,11 +67,10 @@ function Index() {
                     className={'text-white my-5 text-3xl'}>
                     {AuthStore.getRawState().user?.displayName}
                 </Text>
-
                 {
                     /*Company Description or About me*/
                     AuthStore.getRawState().data?.isCompany ?
-                        <View className={'w-full mb-5'}>
+                        <View className={'w-full mb-4'}>
                             <Text
                                 style={{ fontFamily: 'MotivaRegular' }}
                                 className={'mb-4 text-left text-bold text-xl'}>
@@ -80,7 +79,7 @@ function Index() {
                             <Description />
                         </View>
                         :
-                        <View className={'w-full mb-5'}>
+                        <View className={'w-full mb-4'}>
                             <Text
                                 style={{ fontFamily: 'MotivaRegular' }}
                                 className={'mb-4 text-left text-bold text-xl'}>

@@ -3,14 +3,20 @@ import { PostCard } from './PostCard';
 import { useState, useEffect } from 'react';
 import { AuthStore } from '../../../store';
 
-function PreviousPost() {
+function PreviousPosts() {
     const [postList, setPostList] = useState(AuthStore.getRawState().data?.posts);
 
     return (
-        <View>
+        <View className={'h-[330px]'}>
+            <Text
+                    style={{ fontFamily: 'MotivaRegular' }}
+                    className={'mb-4 text-left text-bold text-xl'}>
+                    Previous Posts:
+                </Text>
             {
                 postList.length > 0 ?
                     <FlatList
+                        className={'rounded-xl'}
                         showsVerticalScrollIndicator={false}
                         data={postList}
                         renderItem={({ item }) =>
@@ -30,4 +36,4 @@ function PreviousPost() {
     )
 }
 
-export { PreviousPost };
+export { PreviousPosts };
