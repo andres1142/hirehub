@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { useState } from "react";
 import { PencilSquareIcon, MinusIcon } from "react-native-heroicons/solid";
-import { RemoveCard, EditEntry } from "./modals";
+import { RemoveCard, EditEntry } from "../modals";
 
 function JobCard({ resumeList, setResumeList, canEdit, index, title, timePeriod, description, handleRemoveItem }) {
 
@@ -28,7 +28,7 @@ function JobCard({ resumeList, setResumeList, canEdit, index, title, timePeriod,
         for (let i = 0; i < resumeList.length; i++) {
             temp.push({ ...resumeList[i] })
         }
-        temp[index] = {...resumeList[index], title: newTitle, date: newTimePeriod, description: newDescription }
+        temp[index] = { ...resumeList[index], title: newTitle, date: newTimePeriod, description: newDescription }
         setResumeList(temp)
     }
 
@@ -88,4 +88,4 @@ function JobCard({ resumeList, setResumeList, canEdit, index, title, timePeriod,
     )
 }
 
-export { JobCard }
+export { JobCard };

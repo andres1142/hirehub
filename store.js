@@ -149,18 +149,34 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
         photoURL = await getDownloadURL(storageRef)
 
 
+        if (isCompany) {
+            await setDoc(doc(firestore, "users", user.uid),
+                {
+                    description: description,
+                    zipCode: zipCode,
+                    isCompany: isCompany,
+                    posts: []
+                }
+            )
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                })
+        } else {
+            await setDoc(doc(firestore, "users", user.uid),
+                {
+                    description: description,
+                    zipCode: zipCode,
+                    isCompany: isCompany,
+                    resume: []
+                }
+            )
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                })
+        }
 
-        await setDoc(doc(firestore, "users", user.uid),
-            {
-                description: description,
-                zipCode: zipCode,
-                isCompany: isCompany,
-                resume: []
-            }
-        )
-            .catch((error) => {
-                console.error("Error writing document: ", error);
-            })
+
+
         return photoURL
     } catch (e) {
         console.log(e)
@@ -236,15 +252,27 @@ const addResumeEntry = (resume) => {
 const updateData = async () => {
     if (JSON.stringify(AuthStore.getRawState().data) !== JSON.stringify(AuthStore.getRawState().dataCopy)) {
         try {
-            await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid), {
-                description: AuthStore.getRawState().data.description,
-                resume: AuthStore.getRawState().data.resume
-            })
+            if (AuthStore.getRawState().data.isCompany) {
+                await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid), {
+                    description: AuthStore.getRawState().data.description,
+                    posts: AuthStore.getRawState().data.posts
+                })
 
-            AuthStore.update((store) => {
-                store.dataCopy.description = store.data.description,
-                    store.dataCopy.resume = store.data.resume
-            })
+                AuthStore.update((store) => {
+                    store.dataCopy.description = store.data.description,
+                        store.dataCopy.posts = store.data.posts
+                })
+            } else {
+                await updateDoc(doc(firestore, "users", AuthStore.getRawState().user.uid), {
+                    description: AuthStore.getRawState().data.description,
+                    resume: AuthStore.getRawState().data.resume
+                })
+
+                AuthStore.update((store) => {
+                    store.dataCopy.description = store.data.description,
+                        store.dataCopy.resume = store.data.resume
+                })
+            }
         } catch (e) {
             console.log(e)
         }
