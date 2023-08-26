@@ -1,4 +1,4 @@
-import { Store, registerInDevtools } from 'pullstate'
+import { Store, registerInDevtools, createAsyncAction, successResult, errorResult } from 'pullstate'
 import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
@@ -8,7 +8,8 @@ import {
 } from 'firebase/auth'
 import { auth, firestore, storage } from './config/firebase.config'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { fetchUserData } from './utils/databaseHandler';
 
 
 // Create a store with an initial state
@@ -26,6 +27,8 @@ const unsub = onAuthStateChanged(auth, (user) => {
         store.user = user
         store.isLoggedIn = !!user
         store.initialized = true
+        store.data = user ? store.data : null
+        store.dataCopy = user ? store.dataCopy : null
     })
 })
 
@@ -191,10 +194,10 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
 
 const setUserData = async (user) => {
     try {
-        const userStoredData = await getDoc(doc(firestore, "users", user.uid))
+        const data = await fetchUserData(user)
         AuthStore.update((store) => {
-            store.data = userStoredData.data()
-            store.dataCopy = userStoredData.data()
+            store.data = data
+            store.dataCopy = data
         })
     } catch (e) {
         console.log(e)
