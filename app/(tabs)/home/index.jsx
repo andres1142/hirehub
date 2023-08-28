@@ -3,9 +3,8 @@ import { useState, useEffect } from "react";
 import { SafeAreaView, ScrollView, View, TouchableOpacity, Text, TextInput, StyleSheet } from "react-native";
 import { AuthStore, appSignOut, setUserData } from "../../../store";
 import { PlusIcon, MagnifyingGlassIcon } from "react-native-heroicons/solid";
-import { fetchUserData } from "../../../utils/databaseHandler";
 import { CreatePost } from "../../../components/home/modals";
-import { set } from "react-native-reanimated";
+import { fetchUserData } from "../../../utils/databaseHandler";
 
 function Index() {
     const [data, setData] = useState({isCompany: false});
@@ -31,7 +30,8 @@ function Index() {
         async function fetchData() {
             const user = AuthStore.getRawState().user;
             try {
-                await setUserData(user);
+                const data = await fetchUserData(user)
+                await setUserData(data);
                 setData(AuthStore.getRawState().data);
             } catch (error) {
                 console.error("Error fetching user data:", error);

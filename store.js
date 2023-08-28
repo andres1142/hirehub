@@ -44,7 +44,8 @@ const unsub = onAuthStateChanged(auth, (user) => {
 const appSignIn = async (email, password) => {
     try {
         const result = await signInWithEmailAndPassword(auth, email, password)
-        await setUserData(result.user)
+        const data = await fetchUserData(result.user)
+        await setUserData(data)
         AuthStore.update((store) => {
             store.user = result.user
             store.isLoggedIn = !!result.user
@@ -103,8 +104,8 @@ const appSignUp = async (email, password, name, description, zipCode, isCompany,
         // add the displayName and photoURL to the user
         await updateProfile(result.user, { displayName: name, photoURL: photoURL })
 
-
-        await setUserData(result.user)
+        const data = await fetchUserData(result.user)
+        await setUserData(data)
         AuthStore.update((store) => {
             store.user = auth.currentUser;
             store.isLoggedIn = true;
@@ -192,9 +193,8 @@ const storeUserData = async (user, name, description, zipCode, isCompany, profil
  * @param {*} user 
  */
 
-const setUserData = async (user) => {
+const setUserData = async (data) => {
     try {
-        const data = await fetchUserData(user)
         AuthStore.update((store) => {
             store.data = data
             store.dataCopy = data
