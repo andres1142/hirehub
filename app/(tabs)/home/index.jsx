@@ -5,6 +5,7 @@ import { AuthStore, appSignOut, setUserData } from "../../../store";
 import { PlusIcon, MagnifyingGlassIcon } from "react-native-heroicons/solid";
 import { fetchUserData } from "../../../utils/databaseHandler";
 import { CreatePost } from "../../../components/home/modals";
+import { set } from "react-native-reanimated";
 
 function Index() {
     const [data, setData] = useState({isCompany: false});
@@ -30,8 +31,8 @@ function Index() {
         async function fetchData() {
             const user = AuthStore.getRawState().user;
             try {
-                const result = await fetchUserData(user);
-                setData(result);
+                await setUserData(user);
+                setData(AuthStore.getRawState().data);
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
